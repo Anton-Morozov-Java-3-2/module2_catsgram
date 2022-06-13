@@ -1,25 +1,40 @@
 package ru.yandex.practicum.catsgram.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.service.PostService;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class PostController {
 
-    private final List<Post> posts = new ArrayList<>();
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
+
+    private final PostService postService;
+
+    @Autowired
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @GetMapping("/posts")
     public List<Post> findAll() {
-        return posts;
+        List<Post> list = postService.findAll();
+        log.debug("Количество постов {}", list.size());
+        return list;
     }
 
     @PostMapping(value = "/post")
     public void create(@RequestBody Post post) {
-        posts.add(post);
+        log.info("{}", post);
+        postService.create(post);
     }
 }

@@ -1,17 +1,25 @@
 package ru.yandex.practicum.catsgram.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.model.User;
 
 import java.util.HashSet;
 
+
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     HashSet<User> users = new HashSet<>();
 
     @GetMapping
     public HashSet<User> getUsers(){
+        log.info("Количество пользователей {}", users.size());
         return users;
     }
 
@@ -22,6 +30,7 @@ public class UserController {
         } else {
             checkEmail(user);
             users.add(user);
+            log.info("{}", user.toString());
             return user;
         }
     }
